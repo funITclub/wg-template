@@ -5,7 +5,7 @@ import os
 from .settings_common import *
 
 # ローカルの秘密情報は .env から読む（.gitignore 済み）。
-# 既に環境変数がある場合はそちらを優先する（Codespaces のシークレットなど）。
+# 既に環境変数がある場合はそちらを優先する（setdefault）。
 _env_file = BASE_DIR / '.env'
 if _env_file.exists():
     for _line in _env_file.read_text(encoding='utf-8').splitlines():
@@ -21,13 +21,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 CSRF_TRUSTED_ORIGINS = []
-
-# GitHub Codespaces では、転送したポートが https://<codespace 名>-8000.app.github.dev で開く。
-# そのホスト名で届くので、許可に加える（CSRF はログインなどの POST に要る）。
-_codespaces_domain = os.environ.get('GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN', '').strip()
-if os.environ.get('CODESPACES') == 'true' and _codespaces_domain:
-    ALLOWED_HOSTS.append(f'.{_codespaces_domain}')
-    CSRF_TRUSTED_ORIGINS.append(f'https://*.{_codespaces_domain}')
 
 # メールは送らず、runserver のログに出す。
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

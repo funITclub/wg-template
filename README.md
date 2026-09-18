@@ -2,7 +2,7 @@
 
 fun IT club の WG が作るアプリのひな形（Django）。WG のリポジトリはこのテンプレートから作る。
 
-開発環境（VS Code ＋ Dev Container / GitHub Codespaces）は homepage と共通で、手順は
+開発環境（VS Code ＋ Docker Desktop の Dev Container）は homepage と共通で、手順は
 [開発環境と手順](https://github.com/funITclub/homepage/blob/main/docs/development.md) にある。
 このリポジトリを開いてコンテナができたら、`F5` でサイトが起動する。
 
@@ -11,34 +11,62 @@ fun IT club の WG が作るアプリのひな形（Django）。WG のリポジ�
 
 ## 開発の流れ
 
-WG のリポジトリは複数人で触るので、**`main` に直接 push しない**。ブランチを切って
-プルリクエスト（PR）を出し、テストが通って WG の誰かが確認してからマージする。
+WG のリポジトリは複数人で触るので、**`main` に直接 push しない**（ルールで止めてある）。
+自分用の「ブランチ」で作業し、プルリクエスト（PR）を出して、テストが通って WG の誰かが
+確認してから `main` にまとめる（マージ）。
 
-1. **最新にする**：VS Code の左下のブランチ名が `main` になっていることを確かめ、
-   「ソース管理」の「…」→「プル」。
-2. **ブランチを切る**：左下のブランチ名 →「新しいブランチの作成」。名前は
-   `やること-短く`（例：`add-login-page`、`fix-date-format`）。
-3. **作ってコミットする**：こまめにコミットしてよい。メッセージは日本語で、何をなぜ変えたか。
-4. **push する**：「ブランチの発行」を押す。
-5. **PR を出す**：GitHub のリポジトリを開くと「Compare & pull request」が出るので押す。
-   何を変えたか・どう確かめたかを書く。
-6. **テストを待つ**：PR の下で「Test」が緑になるのを待つ。赤なら直して同じブランチに push する。
-7. **確認してもらう**：WG の誰かに見てもらい、「Approve」をもらう。
-8. **マージする**：「Squash and merge」。終わったらブランチは消してよい。
-9. **手元を main に戻す**：左下で `main` に切り替えて、プルする。
+開発環境の準備がまだなら、先に
+[開発環境と手順](https://github.com/funITclub/homepage/blob/main/docs/development.md) を済ませる。
 
-テストは手元でも流せる（push する前に流しておくと早い）。
+### VS Code でやること
 
-```bash
-python manage.py test
-```
+1. **最新にする**
+   - 左下にブランチ名が出ている。`main` になっていることを確かめる。
+   - 左の「**ソース管理**」（枝分かれのアイコン）→ 上の「**…**」→「**プル**」。
+2. **ブランチを作る**
+   - 左下のブランチ名（`main`）を押す →「**+ 新しいブランチの作成...**」。
+   - 名前を英小文字とハイフンで入れて Enter（例：`add-login-page`、`fix-date-format`）。
+   - 左下が新しいブランチ名に変わる。
+3. **作る**：コードを書き、`F5` で動きを確かめる。
+4. **テストを流す**：ターミナルで `python manage.py test`。最後に `OK` と出れば通っている。
+5. **コミットする**（変更を記録する）
+   - 「ソース管理」を開くと、変えたファイルが並んでいる。
+   - 上の入力欄に、何をなぜ変えたかを日本語で書く（例：`ログイン画面を追加する`）。
+   - 「**コミット**」を押す。「ステージされている変更がなく…直接コミットしますか?」と
+     出たら「**はい**」。
+   - 区切りのいいところで何回コミットしてもよい。
+6. **GitHub に送る**：「**Branch の発行**」を押す（2 回目からは「**変更の同期**」）。
+   初回は GitHub へのサインインを求められるので、「許可」→ ブラウザで「Authorize」。
+
+### GitHub でやること
+
+7. **PR を出す**
+   - ブラウザでリポジトリのページを開くと、上に黄色い帯で
+     「**Compare & pull request**」が出ているので押す。
+   - タイトルと、「何を変えたか」「どう確かめたか」を書いて「**Create pull request**」。
+8. **テストを待つ**：PR の下のほうで「**Test**」が動く。緑のチェックになれば通過。
+   赤い × なら「Details」でエラーを見て、VS Code で直して 5〜6 をもう一度（同じ PR に反映される）。
+9. **見てもらう**：WG の誰かに PR の URL を送って、確認をお願いする。
+10. **マージする**：「Approve」をもらったら「**Squash and merge**」→「**Confirm squash and merge**」。
+    そのあと出る「**Delete branch**」も押してよい。
+
+### 次の作業に移る
+
+11. VS Code の左下のブランチ名を押して `main` を選ぶ → 1 の「プル」をする。
+    2 からまた始める。
+
+### PR を確認する人（レビュー）
+
+- PR の「**Files changed**」タブで変更を見る。気になる行は行番号の横の「+」でコメントできる。
+- 問題なければ右上の「**Review changes**」→「**Approve**」→「**Submit review**」。
+- 直してほしいときは「**Request changes**」にして、何をどう直すかを書く。
 
 ## 構成
 
 ```
 config/                設定（共通 settings_common / 本番 settings / 開発 settings_dev）
 core/                  最初のアプリ。トップページとテストだけ入っている
-.devcontainer/         開発環境（Dev Container / Codespaces）の定義
+.devcontainer/         開発環境（VS Code の Dev Container）の定義
 .vscode/               VS Code の共通設定（F5 の起動構成・タスク）
 .github/workflows/     PR と main への push でテストを流す
 ```
@@ -50,7 +78,7 @@ core/                  最初のアプリ。トップページとテストだけ
 Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` にしてあるので、
 `--settings` を付けなくてよい。
 
-パスワードや API キーはコードに書かない。手元では `.env`、Codespaces ではシークレットに置く
+パスワードや API キーはコードに書かない。`.env` に置く
 （[開発環境と手順](https://github.com/funITclub/homepage/blob/main/docs/development.md) の「秘密情報の扱い」）。
 
 ## 公開
