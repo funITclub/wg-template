@@ -1,0 +1,29 @@
+# VS Code の設定ファイル。リポジトリで共有するものだけ入れる。
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# Python のコンパイルファイル
+__pycache__/
+*.pyc
+
+# Mac 用
+.DS_Store
+
+# 仮想環境（Dev Container を使わず手元で動かす場合）
+venv/
+.venv/
+
+# データベース
+db.sqlite3
+
+# アップロードされたメディアファイル
+media/
+
+# 静的ファイル（collectstatic の出力）
+staticfiles/
+
+# ローカルの秘密情報
+.env

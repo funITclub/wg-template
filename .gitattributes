@@ -1,0 +1,10 @@
+# 改行コードはリポジトリでも作業ツリーでも LF に揃える。
+# Windows で clone しても CRLF にしない（シェルスクリプトが動かなくなるため）。
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.xlsx binary
+*.pptx binary
+*.sqlite3 binary

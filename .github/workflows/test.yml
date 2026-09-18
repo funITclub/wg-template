@@ -1,0 +1,36 @@
+# プルリクエストと main への push でテストを流す。
+# main のルール（README の「WG のリポジトリを作る」）で、このチェックが通らないと
+# マージできないようにしてある。
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings_dev
+    steps:
+      - uses: actions/checkout@v7
+
+      # Dev Container と同じバージョンに揃える（.devcontainer/devcontainer.json）。
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      # モデルを変えたのにマイグレーションを作り忘れていたら落とす。
+      - name: Check migrations
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Test
+        run: python manage.py test
