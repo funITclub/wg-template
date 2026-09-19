@@ -101,11 +101,16 @@ Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` �
      （自分の PR は自分で承認できないので、メンバーが1人の WG では `0` にする）
    - 「Require status checks to pass」をオンにし、`test` を追加
      （一度も CI が走っていないと候補に出ない。Actions →「Test」→「Run workflow」で一度流す）
-3. **メンバーに書き込み権限を付ける**。「Settings → Collaborators and teams」で、
-   WG のメンバー（または WG の team）に **Write** を付ける。
+3. **WG のチームを作って権限を付ける**。権限は人ごとではなく、チームに付ける。
+   - メンバーを org に招待する（org の「People」→「Invite member」）
+   - チームを作る（org の「Teams」→「New team」）。名前はリポジトリと同じ `wg-<WG の名前>`
+   - チームの「Members」→「Add a member」でメンバーを入れる
+   - リポジトリの「Settings → Collaborators and teams」→「Add teams」で、そのチームに **Write** を付ける
 4. README の先頭を WG 用に書き換える（最初の PR にするとルールの確認にもなる）。
 
-WG のメンバーが卒業・退部したら、3 の権限を外す。
+メンバーの出入りは、チームの「Members」で増減するだけ（リポジトリの設定は触らない）。
+卒業・退部したら org から外す（org の「People」→「Remove from organization」）。
+すべてのチームからも外れる。WG が終わったら、リポジトリをアーカイブしてチームを消す。
 
 テンプレートを直しても、作成済みの WG リポジトリには反映されない。開発環境の標準
 （`.devcontainer/`・`.vscode/`・`.gitattributes`）を変えたときは、homepage にも同じ変更を
