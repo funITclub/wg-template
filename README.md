@@ -100,7 +100,7 @@ Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` �
    - 「Require a pull request before merging」をオン、Required approvals は `1`
      （自分の PR は自分で承認できないので、メンバーが1人の WG では `0` にする）
    - 「Require status checks to pass」をオンにし、`test` を追加
-     （一度も CI が走っていないと候補に出ないので、先に PR を1つ出すか、Actions から流す）
+     （一度も CI が走っていないと候補に出ない。Actions →「Test」→「Run workflow」で一度流す）
 3. **メンバーに書き込み権限を付ける**。「Settings → Collaborators and teams」で、
    WG のメンバー（または WG の team）に **Write** を付ける。
 4. README の先頭を WG 用に書き換える（最初の PR にするとルールの確認にもなる）。

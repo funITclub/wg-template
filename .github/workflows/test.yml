@@ -7,6 +7,9 @@ on:
   pull_request:
   push:
     branches: [main]
+  # 手で流すとき（Actions →「Test」→「Run workflow」）。main のルールで test を
+  # 必須にするとき、一度も流れていないと候補に出ないので、そのときに使う。
+  workflow_dispatch:
 
 permissions:
   contents: read
