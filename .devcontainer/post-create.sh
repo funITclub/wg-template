@@ -13,6 +13,9 @@ fi
 
 python manage.py migrate --noinput
 
+# main に直接送らないための確認を有効にする（.githooks/pre-push）
+git config core.hooksPath .githooks
+
 echo
 echo "準備ができました。F5 でサイトを起動できます。"
 echo "管理画面（/admin/）を使うなら、ログイン用のアカウントを作ってください:"

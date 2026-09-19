@@ -1,0 +1,14 @@
+#!/bin/bash
+# main に直接送らないための確認（Git の pre-push フック）。
+# 作業部屋を作るとき（.devcontainer/post-create.sh）に core.hooksPath で有効にする。
+#
+# WG のリポジトリは非公開で、GitHub の無料プランでは非公開のリポジトリに main を守る
+# ルールを掛けられない。そのため手元で止める（外そうと思えば外せるが、うっかりは防げる）。
+while read -r local_ref local_sha remote_ref remote_sha; do
+    if [ "$remote_ref" = "refs/heads/main" ]; then
+        echo "main には直接送れません。ブランチを作って送り、プルリクエストを出してください。" >&2
+        echo "（左下のブランチ名 →「+ 新しいブランチの作成...」。手順は README の「開発の流れ」）" >&2
+        exit 1
+    fi
+done
+exit 0

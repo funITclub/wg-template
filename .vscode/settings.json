@@ -13,6 +13,11 @@
         "files.trimTrailingWhitespace": false
     },
 
+    // main のままコミットしようとしたら、新しいブランチを作らせる（main はプルリクエストでだけ変える）。
+    // WG のリポジトリは非公開で、GitHub 側で main を守るルールを掛けられないため。
+    "git.branchProtection": ["main"],
+    "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
+
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
     "editor.detectIndentation": false,

@@ -11,7 +11,8 @@ fun IT club の WG が作るアプリのひな形（Django）。WG のリポジ�
 
 ## 開発の流れ
 
-WG のリポジトリは複数人で触るので、**`main` に直接 push しない**（ルールで止めてある）。
+WG のリポジトリは複数人で触るので、**`main` に直接 push しない**。VS Code は `main` のままの
+コミットを止めて新しいブランチを作らせ、`main` への push も送る前に止める（`.githooks/pre-push`）。
 自分用の「ブランチ」で作業し、プルリクエスト（PR）を出して、テストが通って WG の誰かが
 確認してから `main` にまとめる（マージ）。
 
@@ -91,16 +92,15 @@ Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` �
 1. このリポジトリの「**Use this template**」→「**Create a new repository**」。
    - Owner：`funITclub`
    - 名前：`wg-<WG の名前>`（英小文字とハイフン。例：`wg-countdown`）
-   - Public
-2. **main を守るルール**を作る。リポジトリの「Settings → Rules → Rulesets →
-   New ruleset → New branch ruleset」。
-   - 名前：`main`、Enforcement status：Active
-   - Target branches：「Add target → Include default branch」
-   - 「Restrict deletions」と「Block force pushes」をオン
-   - 「Require a pull request before merging」をオン、Required approvals は `1`
-     （自分の PR は自分で承認できないので、メンバーが1人の WG では `0` にする）
-   - 「Require status checks to pass」をオンにし、`test` を追加
-     （一度も CI が走っていないと候補に出ない。Actions →「Test」→「Run workflow」で一度流す）
+   - **Private**（チームの人だけが見られる。org のメンバーの基本権限は「No permission」にしてある）
+2. **main を守る仕組み**は、テンプレートに入っているので作業は要らない。
+   - VS Code の設定（`main` のままコミットしようとすると新しいブランチを作らせる）と、
+     `.githooks/pre-push`（`main` への push を手元で止める。作業部屋を作るときに自動で有効になる）
+   - GitHub の Rulesets（`main` への push を GitHub 側で断る）は、無料プランでは**非公開の
+     リポジトリに掛けられない**。有料の Team プラン（または教育機関向けの無料アップグレード）に
+     したら、Settings → Rules → Rulesets で次を足す：対象は default branch、Restrict deletions・
+     Block force pushes・Require a pull request（承認 1。メンバーが1人の WG は 0）・
+     Require status checks（`test`）
 3. **WG のチームを作って権限を付ける**。権限は人ごとではなく、チームに付ける。
    - チームを作る（org の「Teams」→「New team」）。名前はリポジトリと同じ `wg-<WG の名前>`、
      公開範囲は Visible。作った人（運営）は maintainer として自動で入る。そのままでよい
