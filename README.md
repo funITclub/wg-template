@@ -102,15 +102,23 @@ Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` �
    - 「Require status checks to pass」をオンにし、`test` を追加
      （一度も CI が走っていないと候補に出ない。Actions →「Test」→「Run workflow」で一度流す）
 3. **WG のチームを作って権限を付ける**。権限は人ごとではなく、チームに付ける。
-   - メンバーを org に招待する（org の「People」→「Invite member」）
-   - チームを作る（org の「Teams」→「New team」）。名前はリポジトリと同じ `wg-<WG の名前>`
-   - チームの「Members」→「Add a member」でメンバーを入れる
+   - チームを作る（org の「Teams」→「New team」）。名前はリポジトリと同じ `wg-<WG の名前>`、
+     公開範囲は Visible。作った人（運営）は maintainer として自動で入る。そのままでよい
    - リポジトリの「Settings → Collaborators and teams」→「Add teams」で、そのチームに **Write** を付ける
-4. README の先頭を WG 用に書き換える（最初の PR にするとルールの確認にもなる）。
+   - **メンバーは入れない。** 本人が公開サイトの「WG に参加」から入る（下）
+4. **公開サイトに登録する**。homepage の編集画面（`/edit/`）の「WG紹介」で、その WG の
+   「GitHub のチーム」に `wg-<WG の名前>` を入れる。WG 一覧のカードに「WG に参加」が出る。
+5. README の先頭を WG 用に書き換える（最初の PR にするとルールの確認にもなる）。
 
-メンバーの出入りは、チームの「Members」で増減するだけ（リポジトリの設定は触らない）。
-卒業・退部したら org から外す（org の「People」→「Remove from organization」）。
-すべてのチームからも外れる。WG が終わったら、リポジトリをアーカイブしてチームを消す。
+**メンバーの参加は自動。** WG 一覧の「WG に参加」から、本人が大学のアドレスを入れる →
+Classroom のクラブのクラスにいれば確認のメールが届く → リンクから GitHub でログインすると、
+このチームに入る（まだ org にいない人には org への招待が届く）。運営の作業はない。
+仕組みは homepage の README の「WG への参加」。
+
+WG を抜けた人は、チームの「Members」から外す。卒業・退部したら org から外し
+（org の「People」→「Remove from organization」。すべてのチームからも外れる）、
+Classroom のクラブのクラスからも外す（外さないと「WG に参加」を通れてしまう）。
+WG が終わったら、リポジトリをアーカイブしてチームを消す。
 
 テンプレートを直しても、作成済みの WG リポジトリには反映されない。開発環境の標準
 （`.devcontainer/`・`.vscode/`・`.gitattributes`）を変えたときは、homepage にも同じ変更を
