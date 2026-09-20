@@ -89,11 +89,14 @@ Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` �
 
 ## WG のリポジトリを作る（運営向け）
 
-1. このリポジトリの「**Use this template**」→「**Create a new repository**」。
+1. **公開サイトに「準備中」で載せる**（WG が立ち上がったらすぐ）。homepage の編集画面
+   （`/edit/`）の「WG紹介」→「WGを追加」。状態は「準備中」、「GitHub のチーム」は空欄のまま。
+   アプリがまだでも載せる（ほかのメンバーが活動を知って参加できるように）。
+2. このリポジトリの「**Use this template**」→「**Create a new repository**」。
    - Owner：`funITclub`
    - 名前：`wg-<WG の名前>`（英小文字とハイフン。例：`wg-countdown`）
    - **Private**（チームの人だけが見られる。org のメンバーの基本権限は「No permission」にしてある）
-2. **main を守る仕組み**は、テンプレートに入っているので作業は要らない。
+3. **main を守る仕組み**は、テンプレートに入っているので作業は要らない。
    - VS Code の設定（`main` のままコミットしようとすると新しいブランチを作らせる）と、
      `.githooks/pre-push`（`main` への push を手元で止める。作業部屋を作るときに自動で有効になる）
    - GitHub の Rulesets（`main` への push を GitHub 側で断る）は、無料プランでは**非公開の
@@ -101,14 +104,16 @@ Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` �
      したら、Settings → Rules → Rulesets で次を足す：対象は default branch、Restrict deletions・
      Block force pushes・Require a pull request（承認 1。メンバーが1人の WG は 0）・
      Require status checks（`test`）
-3. **WG のチームを作って権限を付ける**。権限は人ごとではなく、チームに付ける。
+4. **WG のチームを作って権限を付ける**。権限は人ごとではなく、チームに付ける。
    - チームを作る（org の「Teams」→「New team」）。名前はリポジトリと同じ `wg-<WG の名前>`、
      公開範囲は Visible。作った人（運営）は maintainer として自動で入る。そのままでよい
    - リポジトリの「Settings → Collaborators and teams」→「Add teams」で、そのチームに **Write** を付ける
    - **メンバーは入れない。** 本人が公開サイトの「WG に参加」から入る（下）
-4. **公開サイトに登録する**。homepage の編集画面（`/edit/`）の「WG紹介」で、その WG の
-   「GitHub のチーム」に `wg-<WG の名前>` を入れる。WG 一覧のカードに「WG に参加」が出る。
-5. README の先頭を WG 用に書き換える（最初の PR にするとルールの確認にもなる）。
+5. **サイトとつなぐ**。1 で載せた WG の「GitHub のチーム」に `wg-<WG の名前>` を入れて保存する。
+   WG 一覧のカードに「WG に参加」が出る。
+6. README の先頭を WG 用に書き換える（最初の PR にするとルールの確認にもなる）。
+
+アプリができたら、WG紹介の状態を「活動中」にして、Webアプリの URL を入れる。
 
 **メンバーの参加は自動。** WG 一覧の「WG に参加」から、本人が大学のアドレスを入れる →
 Classroom のクラブのクラスにいれば確認のメールが届く → リンクから GitHub でログインすると、
