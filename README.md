@@ -130,6 +130,20 @@ App Service の wg/<名前>/            公開はここで動く。URL は /<名
 - **`apps.py` を置かない**（テンプレートにも入れていない）。このリポジトリでは `<名前>`、
   本番では `wg.<名前>` と読み込まれる名前が変わるため。無ければ Django が自動で作り、
   呼び名（`label`）はどちらも `<名前>` になるのでマイグレーションが一致する
+- **誰でも見せるページには `login_not_required` を付ける**。本番は既定で全ビューが
+  ログイン必須（homepage の `LoginRequiredMiddleware`）。付け忘れると、手元では見えるのに
+  公開したらログイン画面に飛ばされる。逆に、WG の中だけで使う画面には付けないでおけば、
+  そのままログイン必須になる
+
+  ```python
+  from django.contrib.auth.decorators import login_not_required
+  from django.utils.decorators import method_decorator
+
+  @method_decorator(login_not_required, name='dispatch')   # クラスベースのとき
+  class IndexView(generic.TemplateView):
+      ...
+  ```
+
 - **`config/` と `manage.py` は本番に持ち込まれない**（homepage 側の設定で動く）。
   設定が要るものは、運営に言って homepage の `settings_common.py` に足してもらう
 - 秘密情報は `.env` ではなく App Service の設定に入る。運営に渡す
