@@ -75,6 +75,14 @@ core/                  最初のアプリ。トップページとテストだけ
 アプリを足すときは `python manage.py startapp <名前>` で作り、
 `config/settings_common.py` の `INSTALLED_APPS` に足す。
 
+**アプリの名前は `core` のままにせず、WG ごとに一意なものにする**（例: `protein`）。
+公開のときに homepage へそのまま移すので、ほかの WG とぶつからない名前が要る。
+あわせて次も同じ名前で揃えておくと、移すときに書き換えが出ない。
+
+- `core/urls.py` の `app_name`
+- テンプレートの置き場所（`<名前>/templates/<名前>/…`）
+- モデルを持つなら `class Meta` の `db_table`（`funitclub_<名前>_…`）
+
 設定は homepage と同じく3ファイルに分けてあり、**既定は本番**（`config.settings`）。
 Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` にしてあるので、
 `--settings` を付けなくてよい。
@@ -84,8 +92,45 @@ Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` �
 
 ## 公開
 
-公開（デプロイ）の仕組みは準備中。公開できたら、homepage の編集画面（`/edit/`）の
-「WG紹介」に URL を登録すると、公開サイトの WG 一覧からリンクされる。
+**このリポジトリは公開されない。** 公開するのは動いている Web ページだけで、ソースは
+成果物に含めない（リポジトリは完成後も非公開のまま）。
+
+公開は、**homepage のリポジトリにアプリを移して**行う。homepage には置き場所が2つある。
+
+| | 置き場所 | 送り返す先 |
+|---|---|---|
+| 作っている途中 | `wg/<名前>/` | WG 一覧 `/wg/` |
+| 公表したもの | `works/<名前>/` | 成果物一覧 `/works/` |
+
+フォルダー名は URL に出ない。URL は homepage の `config/urls.py` で決める
+（`wg.protein` → `/protein/`）。公表できる形になったら `wg/` から `works/` へ移し、
+URL は変えない。
+
+### 移すときにやること（運営）
+
+1. アプリのフォルダー（`<名前>/`）だけを homepage の `wg/` へコピーする。
+   **`config/` は持ち込まない**（homepage 側の設定を使う）。設定が要るなら
+   `config/settings_common.py` に定数として足す
+2. `apps.py` の `name` を `wg.<名前>` にし、`label = '<名前>'` を明示する
+   （あとで `works/` へ移してもマイグレーションと DB の呼び名が変わらない）
+3. homepage の `INSTALLED_APPS` と `config/urls.py` に足す
+4. homepage の `GATE_BACK` に `'/<URL>/': 'home:wg_list'` を足す（公表時は `home:work_list`）
+5. `/edit/` の「WG紹介」で、その WG の「Webアプリの URL」を入れる
+
+### URL を直打ちしても開かない
+
+公開したアプリは、**ホームページの一覧から辿ったときだけ開く**（homepage の
+`config/gate.py`）。一覧のリンクに期限つきの通行証が付いていて、通行証も印も無い
+アクセスは一覧へ送り返される。入口を funitclub に集めるためで、WG のアプリだけを
+単体で使われないようにする狙い。
+
+作るときは、次の2つに気をつける。
+
+- アプリの中のリンクは**相対**で書く（`{% url %}` を使う）。一覧を経由しない
+  入口を自分で作らない
+- 外部サービスからの戻り先（メールのリンクなど）が要るときは、そこだけ通行証を
+  免除する必要がある。**別の鍵（署名付きリンクなど）を自分で持たせたうえで**、
+  運営に相談する
 
 ## WG のリポジトリを作る（運営向け）
 
@@ -113,7 +158,9 @@ Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` �
    WG 一覧のカードに「WG に参加」が出る。
 6. README の先頭を WG 用に書き換える（最初の PR にするとルールの確認にもなる）。
 
-アプリができたら、WG紹介の状態を「活動中」にして、Webアプリの URL を入れる。
+アプリができたら、homepage の `wg/` へ移して公開する（上の「公開」）。WG紹介の状態を
+「活動中」にして、Webアプリの URL を入れる。公表できる形になったら `works/` へ移し、
+成果物紹介にも登録する。
 
 **メンバーの参加は自動。** WG 一覧の「WG に参加」から、本人が大学のアドレスを入れる →
 Classroom のクラブのクラスにいれば確認のメールが届く → リンクから GitHub でログインすると、
