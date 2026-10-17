@@ -95,27 +95,45 @@ Dev Container の中と CI では `DJANGO_SETTINGS_MODULE=config.settings_dev` �
 **このリポジトリは公開されない。** 公開するのは動いている Web ページだけで、ソースは
 成果物に含めない（リポジトリは完成後も非公開のまま）。
 
-公開は、**homepage のリポジトリにアプリを移して**行う。homepage には置き場所が2つある。
+公開は、**homepage（funitclub.org）の中でこのアプリを動かす**かたちで行う。
+置き場所は 2 つあり、公表できる形になったら移る（URL は変わらない）。
 
-| | 置き場所 | 送り返す先 |
-|---|---|---|
-| 作っている途中 | `wg/<名前>/` | WG 一覧 `/wg/` |
-| 公表したもの | `works/<名前>/` | 成果物一覧 `/works/` |
+| | 置き場所 | URL | 直打ちしたとき |
+|---|---|---|---|
+| 作っている途中 | `wg/<名前>/` | `/<名前>/` | WG 一覧 `/wg/` へ送り返す |
+| 公表したもの | `works/<名前>/` | 同じ | 成果物一覧 `/works/` へ送り返す |
 
-フォルダー名は URL に出ない。URL は homepage の `config/urls.py` で決める
-（`wg.protein` → `/protein/`）。公表できる形になったら `wg/` から `works/` へ移し、
-URL は変えない。
+フォルダー名は URL に出ない。**アプリのフォルダー名がそのまま URL** になる
+（`protein` → `/protein/`）。homepage 側で URL を書き足す作業は要らない。
 
-### 移すときにやること（運営）
+**リポジトリは分けたまま**で、ソースが homepage（公開リポジトリ）に入ることはない。
+homepage のデプロイが、そのときだけこのリポジトリを読んで `wg/<名前>/` に置く。
 
-1. アプリのフォルダー（`<名前>/`）だけを homepage の `wg/` へコピーする。
-   **`config/` は持ち込まない**（homepage 側の設定を使う）。設定が要るなら
-   `config/settings_common.py` に定数として足す
-2. `apps.py` の `name` を `wg.<名前>` にし、`label = '<名前>'` を明示する
-   （あとで `works/` へ移してもマイグレーションと DB の呼び名が変わらない）
-3. homepage の `INSTALLED_APPS` と `config/urls.py` に足す
-4. homepage の `GATE_BACK` に `'/<URL>/': 'home:wg_list'` を足す（公表時は `home:work_list`）
-5. `/edit/` の「WG紹介」で、その WG の「Webアプリの URL」を入れる
+```
+funITclub/wg-<名前>（非公開）        ここで開発する
+     ↓ デプロイのときだけ取り込まれる
+App Service の wg/<名前>/            公開はここで動く。URL は /<名前>/
+```
+
+### 載せるときにやること（運営）
+
+1. homepage の `wg-apps.yml` に 1 行足す（`repo` / `app` / `as`）
+2. このリポジトリの Secrets に、起動用の2つを入れる
+   （`HOMEPAGE_DEPLOY_APP_ID`・`HOMEPAGE_DEPLOY_PRIVATE_KEY`。手順は homepage の `deploy.txt`）
+3. `/edit/` の「WG紹介」で、その WG の「Webアプリの URL」を入れる
+
+以後は、**このリポジトリの `main` に push するたびに自動で公開される**
+（`.github/workflows/deploy.yml` が homepage のデプロイを起動する）。
+
+### 作るときの決まり
+
+- **`apps.py` を置かない**（テンプレートにも入れていない）。このリポジトリでは `<名前>`、
+  本番では `wg.<名前>` と読み込まれる名前が変わるため。無ければ Django が自動で作り、
+  呼び名（`label`）はどちらも `<名前>` になるのでマイグレーションが一致する
+- **`config/` と `manage.py` は本番に持ち込まれない**（homepage 側の設定で動く）。
+  設定が要るものは、運営に言って homepage の `settings_common.py` に足してもらう
+- 秘密情報は `.env` ではなく App Service の設定に入る。運営に渡す
+- `requirements.txt` に足したものは、本番の分と合わせて入る。増やしすぎない
 
 ### URL を直打ちしても開かない
 
