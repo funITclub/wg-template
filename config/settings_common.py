@@ -18,6 +18,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # 自作アプリ。WG のアプリはここに足していく。
+    # アプリは WG ごとに一意な名前にする（core のままにしない。README の「公開」）。
+    # apps.py は置かない。本番では wg.<名前> として読み込まれるため。
     'core',
 ]
 

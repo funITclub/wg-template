@@ -1,0 +1,60 @@
+# main が更新されたら、homepage のデプロイを起動する。
+#
+# WG のアプリは homepage（funitclub.org）の中で動く。公開はそちらのデプロイで行い、
+# このリポジトリのソースは非公開のまま取り込まれる（README の「公開」）。
+#
+# ここで使うトークンの権限は、homepage に対する Actions: Write だけ。
+# できるのは「デプロイを起動すること」だけで、homepage のコードは書き換えられない。
+#
+# 動かすには、このリポジトリの Secrets に次の2つが要る（運営が入れる）。
+#   HOMEPAGE_DEPLOY_APP_ID        GitHub App の App ID
+#   HOMEPAGE_DEPLOY_PRIVATE_KEY   その App の秘密鍵（.pem の中身）
+# 入っていないあいだは、このワークフローは何もせずに終わる（エラーにはしない）。
+#
+# 取り込まれるのは、homepage の wg-apps.yml に登録されている WG だけ。
+# 登録前にここが走っても、homepage のデプロイが走るだけで中身は変わらない。
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-homepage
+  cancel-in-progress: false
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the secrets are set
+        id: check
+        run: |
+          if [ -n "${{ secrets.HOMEPAGE_DEPLOY_APP_ID }}" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo "::notice::公開の設定がまだなので、何もしません（運営に連絡してください）"
+          fi
+
+      - name: Get a token for homepage
+        id: token
+        if: steps.check.outputs.ready == 'true'
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.HOMEPAGE_DEPLOY_APP_ID }}
+          private-key: ${{ secrets.HOMEPAGE_DEPLOY_PRIVATE_KEY }}
+          owner: funITclub
+          repositories: homepage
+
+      - name: Start the homepage deploy
+        if: steps.check.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          gh api repos/funITclub/homepage/actions/workflows/deploy.yml/dispatches \
+            -f ref=main \
+            -f "inputs[reason]=${{ github.repository }}@${{ github.sha }}"
+          echo "homepage のデプロイを起動しました → https://github.com/funITclub/homepage/actions"
