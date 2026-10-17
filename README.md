@@ -133,7 +133,9 @@ App Service の wg/<名前>/            公開はここで動く。URL は /<名
 - **`config/` と `manage.py` は本番に持ち込まれない**（homepage 側の設定で動く）。
   設定が要るものは、運営に言って homepage の `settings_common.py` に足してもらう
 - 秘密情報は `.env` ではなく App Service の設定に入る。運営に渡す
-- `requirements.txt` に足したものは、本番の分と合わせて入る。増やしすぎない
+- `requirements.txt` に足したものは、本番の分と合わせて入る。増やしすぎない。
+  **Django などの版は homepage と同じにしておく**（テンプレートは合わせてある）。
+  連結してから `pip install` するので、版が食い違うと pip が解決できずデプロイが落ちる
 
 ### URL を直打ちしても開かない
 
