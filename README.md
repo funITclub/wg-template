@@ -121,7 +121,8 @@ App Service の wg/<名前>/            公開はここで動く。URL は /<名
    活動ページは `{app: <名前>_activity, url: <名前>/activity}`、WG が作る Web アプリは `<名前>`
 2. このリポジトリの Secrets に、起動用の2つを入れる
    （`HOMEPAGE_DEPLOY_APP_ID`・`HOMEPAGE_DEPLOY_PRIVATE_KEY`。手順は homepage の `deploy.txt`）
-3. `/edit/` の「WG紹介」で、その WG のカードに登録する。登録先は 2 つある
+3. その WG のカードへの登録（掲載）は、**WG が** `/edit/` の「WG紹介」で行う（ログイン情報は
+   クラブの Classroom に掲示してある）。登録先は 2 つある
    - **活動ページ**（`/<名前>/activity/`）：追加リンクの名前を「活動ページ」、URL を
      `https://funitclub.org/<名前>/activity/` にする
    - **Web アプリ**（`/<名前>/`）：「Webアプリの URL」に `https://funitclub.org/<名前>/` を入れる。
@@ -214,14 +215,14 @@ App Service の wg/<名前>/            公開はここで動く。URL は /<名
      ```
 
    - このリポジトリの Secrets に起動用の2つを入れる（上の「公開」の「載せるときにやること」の 2）
-   - `/edit/` の「WG紹介」で、追加リンクの名前を「活動ページ」、URL を
-     `https://funitclub.org/<WG>/activity/` にする。「Webアプリの URL」は空欄のまま
-   - 活動ページは全画面が公開で、だれでもチケットを作成・編集・削除できる（WG のメンバーに
-     ログインのアカウントを配っていないため）。WG に伝えておく
+   - 載ったら、WG が `/edit/` の「WG紹介」で、追加リンクの名前を「活動ページ」、URL を
+     `https://funitclub.org/<WG>/activity/` にする（ログイン情報は Classroom）。「Webアプリの URL」は空欄のまま
+   - 活動ページは全画面が公開で、だれでもチケットを作成・編集・削除できる（ログインなしで
+     見て書けるようにしてある）。WG に伝えておく
 
 `/<WG>/` は、WG が作る Web アプリのために空けておく。活動ページとは別のアプリで、
 Web アプリができたら homepage の `wg/` へ移して公開する（上の「公開」）。`wg-apps.yml` の
-`take` に `<WG>` を足し、WG紹介の状態を「活動中」にして、「Webアプリの URL」に
+`take` に `<WG>` を足す。WG が WG紹介の状態を「活動中」にして、「Webアプリの URL」に
 `https://funitclub.org/<WG>/` を入れる（活動ページの追加リンクはそのまま残す）。
 公表できる形になったら `works/` へ移し、成果物紹介にも登録する。
 
