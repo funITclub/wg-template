@@ -66,12 +66,31 @@ WG のリポジトリは複数人で触るので、**`main` に直接 push し�
 
 ```
 config/                設定（共通 settings_common / 本番 settings / 開発 settings_dev）
-core/                  最初のアプリ。トップページとテストだけ入っている
+core/                  最初のアプリ。トップページとテストだけ入っている（WG の名前に変えて使う）
 .devcontainer/         開発環境（VS Code の Dev Container）の定義
 .vscode/               VS Code の共通設定（F5 の起動構成・タスク）
 .github/workflows/     PR と main への push でテストを流す
 .github/ISSUE_TEMPLATE/  チケット（Issue）のフォーム。バグ・機能・サポート
 ```
+
+### WG のリポジトリが持つアプリ
+
+テンプレートに入っているアプリは `core` だけ。立ち上げたあとの WG のリポジトリは、
+次の 2 つのアプリを持つ形になる。
+
+| アプリ | 中身 | URL（本番） | 手元 | いつ載せるか |
+|---|---|---|---|---|
+| `<WG>_activity` | 活動ページ（WG の紹介・構想資料・チケット管理） | `/<WG>/activity/` | `/activity/` | 立ち上げてすぐ（下の「WG のリポジトリを作る」の 7） |
+| `<WG>`（元の `core`） | WG が作る Web アプリ | `/<WG>/` | `/` | できてから（下の「公開」） |
+
+- **`core`** はトップページ 1 枚とテストだけのひな形。名前を WG の名前に変えて（下の決まり）、
+  WG が作る Web アプリに育てる
+- **活動ページはテンプレートに入っていない。** [funITclub/claude-plugins](https://github.com/funITclub/claude-plugins)
+  の wg-activity スキルで足す。テンプレートは作るときに一度写すだけで、あとから直しても
+  作成済みの WG には届かない。スキルなら `claude plugin update wg-activity@funitclub` で、
+  全 WG が同じ手直しを追える
+- 2 つは互いに参照しない別のアプリ。活動ページから Web アプリへのリンクは、活動ページの
+  `content.py` の `LINKS` に書く
 
 アプリを足すときは `python manage.py startapp <名前>` で作り、
 `config/settings_common.py` の `INSTALLED_APPS` に足す。
