@@ -70,6 +70,7 @@ core/                  最初のアプリ。トップページとテストだけ
 .devcontainer/         開発環境（VS Code の Dev Container）の定義
 .vscode/               VS Code の共通設定（F5 の起動構成・タスク）
 .github/workflows/     PR と main への push でテストを流す
+.github/ISSUE_TEMPLATE/  チケット（Issue）のフォーム。バグ・機能・サポート
 ```
 
 アプリを足すときは `python manage.py startapp <名前>` で作り、
@@ -199,7 +200,7 @@ App Service の wg/<名前>/            公開はここで動く。URL は /<名
    WG 一覧のカードに「WG に参加」が出る。
 6. README の先頭を WG 用に書き換える（最初の PR にするとルールの確認にもなる）。
 7. **活動ページを入れる**（立ち上げたらすぐ。Web アプリより先に載せる）。WG の紹介・構想資料・
-   チケット管理を見せる場所で、`/<WG>/activity/` に置く（`<WG>` は WG の名前。英小文字と数字。
+   チケットの様子を見せる場所で、`/<WG>/activity/` に置く（`<WG>` は WG の名前。英小文字と数字。
    例：`countdown`）。
    - [funITclub/claude-plugins](https://github.com/funITclub/claude-plugins) の wg-activity スキル
      （`plugins/wg-activity/skills/wg-activity/SKILL.md`）で、このリポジトリに `<WG>_activity` を作る。
@@ -217,8 +218,10 @@ App Service の wg/<名前>/            公開はここで動く。URL は /<名
    - このリポジトリの Secrets に起動用の2つを入れる（上の「公開」の「載せるときにやること」の 2）
    - 載ったら、WG が `/edit/` の「WG紹介」で、追加リンクの名前を「活動ページ」、URL を
      `https://funitclub.org/<WG>/activity/` にする（ログイン情報は Classroom）。「Webアプリの URL」は空欄のまま
-   - 活動ページは全画面が公開で、だれでもチケットを作成・編集・削除できる（ログインなしで
-     見て書けるようにしてある）。WG に伝えておく
+   - チケットはこのリポジトリの Issue に、メンバーが GitHub で直接書く（活動ページは読んで見せるだけ）。
+     **題名と本文は活動ページで一般公開される**ので、個人の名前・連絡先、パスワードや API キーは書かない
+     （issue フォームの先頭にも書いてある）。担当者・コメント・画像は活動ページに出ない。WG に伝えておく
+   - ステータス・優先度・期日を使うなら、スキルの手順で org の Project のテンプレートを複製する（任意）
 
 `/<WG>/` は、WG が作る Web アプリのために空けておく。活動ページとは別のアプリで、
 Web アプリができたら homepage の `wg/` へ移して公開する（上の「公開」）。`wg-apps.yml` の
